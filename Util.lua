@@ -18,6 +18,7 @@ local overdesc = {
 	[301]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
 	[227]={L"Every other turn, a random enemy is attacked for {}% of their maximum health.", "damagePerc"},
 	[25]={L"Inflicts {} damage to all enemies in melee, and increases own damage dealt by 20% for three turns.", "damageATK"},
+	[121]={L"Reduces all enemies' damage dealt by {}% during the next turn.", "modDamageDealt"}
 }
 
 local GetMaskBoard do
@@ -533,7 +534,7 @@ function U.GetAbilityDescriptionOverride(spellID, atk)
 		if type(od) == "table" then
 			local vk = od[2]
 			local vv = si and (si[vk] or si[1] and si[1][vk] or si[2] and si[2][vk])
-			local rv = vk == "damagePerc" and vv or vv and atk and math.floor(vv*(atk or -1)/100) or ""
+			local rv = vv and ((vk == "damagePerc" or vk == "modDamageDealt") and (vv < 0 and -vv or vv) or atk and math.floor(vv*(atk or -1)/100)) or ""
 			od = od[1]:gsub("{}", rv)
 		end
 		return od
